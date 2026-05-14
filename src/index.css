@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0D0D1A;
+  color: #E6E8F2;
+  overflow-x: hidden;
+}
+
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-display { font-family: 'Space Grotesk', 'Inter', sans-serif !important; }
+
+/* Brand display gradient — white → light blue → primary. Stays legible on dark. */
+.text-metallic {
+  background: linear-gradient(180deg, #ffffff 0%, #D6DEEA 55%, #8A9AB5 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55)) drop-shadow(0 0 18px rgba(107, 127, 160, 0.25));
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D0D1A; }
+::-webkit-scrollbar-thumb { background: #2F3E5C; opacity: 0.5; }
+
+/* Intersection-observer reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(10px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform, filter;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+}
+
+/* Mouse-tracked glow border for cards */
+.glow-card { position: relative; }
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(800px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px), rgba(107, 127, 160, 0.10), transparent 40%);
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  border-radius: inherit;
+}
+.glow-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(400px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px), rgba(107, 127, 160, 0.8), transparent 40%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  padding: 1px;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.glow-card:hover::before,
+.glow-card:hover::after { opacity: 1; }
+
+/* Boot-sequence reveal classes (used on first paint) */
+.boot-anim-translate-xy {
+  transform: translate(-100%, 100%);
+  transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.app-booted .boot-anim-translate-xy { transform: translate(0, 0); }
+
+.boot-anim-translate-x {
+  transform: translateX(-100%);
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.app-booted .boot-anim-translate-x { transform: translateX(0); }
+
+.boot-anim-fade-y {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.app-booted .boot-anim-fade-y { opacity: 1; transform: translateY(0); }
+
+.boot-anim-pre-title {
+  opacity: 0;
+  letter-spacing: 0.5em !important;
+  transition: opacity 1s ease-out, letter-spacing 1s ease-out;
+}
+.app-booted .boot-anim-pre-title { opacity: 1; letter-spacing: 0.1em !important; }
+
+.boot-anim-title {
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(10px);
+  transition: opacity 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+              transform 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+              filter 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.app-booted .boot-anim-title { opacity: 1; transform: scale(1); filter: blur(0px); }
